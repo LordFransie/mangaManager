@@ -106,4 +106,4 @@ class Manga:
 
     def download(self):
         print("Downloading "+self.name)
-        os.system('gallery-dl ' + self.url + '| grep ✔ --line-buffered |')
+        os.system('gallery-dl ' + self.url + '| grep ✔ --line-buffered')
