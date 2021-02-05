@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import urllib.request, sys, getopt, json, csv, os, shutil, discord_webhook, validators, multiprocessing, requests
 from manga import Manga
 from multiprocessing import Pool
