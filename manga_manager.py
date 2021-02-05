@@ -1,4 +1,4 @@
-import urllib.request, json, csv, os, shutil, discord_webhook, validators, multiprocessing, requests
+import urllib.request, sys, getopt, json, csv, os, shutil, discord_webhook, validators, multiprocessing, requests
 from manga import Manga
 from multiprocessing import Pool
 from pathlib import Path
@@ -33,8 +33,8 @@ def newManga(id):
 def downloadManga(manga):
     manga.download()
 
-def downloadAllManga():
-    with Pool(processes=4) as pool:
+def downloadAllManga(processThreads = 5):
+    with Pool(processes=processThreads) as pool:
         pool.map(downloadManga, list)
 
 
@@ -59,7 +59,8 @@ def mainMenu():
         newManga(input(inputString))
     elif(menuSelection == 4):
         print("This is experimental and runs concurrently")
-        downloadAllManga()
+        processThreads = int(input("How Many Download Threads: "))
+        downloadAllManga(processThreads)
     elif(menuSelection == 5):
         print(list[0].name)
     elif(menuSelection == 6):
@@ -69,7 +70,37 @@ def mainMenu():
     mainMenu()
 
 loadManga()
-mainMenu()
+
+
+def main(argv):
+    inputfile = ''
+    outputfile = ''
+    launchMenu = True
+    try:
+        opts, args = getopt.getopt(argv,"hi:o:r:",["ifile=","ofile="])
+    except getopt.GetoptError:
+        print ('test.py -i <inputfile> -o <outputfile>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print ('test.py -i <inputfile> -o <outputfile>')
+            sys.exit()
+        elif opt in ("-i", "--ifile"):
+            inputfile = arg
+        elif opt in ("-o", "--ofile"):
+            outputfile = arg
+        elif opt in ("-r"):
+            launchMenu == False
+            downloadAllManga(int(arg))
+
+    if(launchMenu == True):
+        mainMenu()
+     
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
+
+# mainMenu()
 
 
 # Write to file
